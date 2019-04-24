@@ -8,19 +8,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# torch.manual_seed(1)    # reproducible
-
-# Hyper Parameters
-EPOCH = 30             # train the training data n times, to save time, we just train 1 epoch
+EPOCH = 30             
 BATCH_SIZE = 200
-LR = 0.001              # learning rate
+LR = 0.001              
 DOWNLOAD_MNIST = True
 num_classes=10
 
 
-# Mnist digits dataset
+
 if not(os.path.exists('./mnist/')) or not os.listdir('./mnist/'):
-    # not mnist dir or mnist is empyt dir
+
     DOWNLOAD_MNIST = True
 
 train_data = torchvision.datasets.FashionMNIST(
@@ -31,10 +28,10 @@ train_data = torchvision.datasets.FashionMNIST(
     download=DOWNLOAD_MNIST,
 )
 
-# plot one example
 
-print(train_data)                 # (60000, 28, 28)
-print(train_data.train_labels.size())               # (60000)
+
+print(train_data)                 
+print(train_data.train_labels.size())               
 plt.imshow(train_data.train_data[0].numpy(), cmap='gray')
 plt.title('%i' % train_data.train_labels[0])
 plt.show()
@@ -111,21 +108,10 @@ for epoch in range(EPOCH):
         optimizer.zero_grad()           # clear gradients for this training step
         loss.backward()                 # backpropagation, compute gradients
         optimizer.step()                # apply gradients
-
-        # if step % 50 == 0:
-            
-            # if HAS_SK:
-            #     # Visualization of trained flatten layer (T-SNE)
-            #     tsne = TSNE(perplexity=30, n_components=2, init='pca', n_iter=5000)
-            #     plot_only = 500
-            #     low_dim_embs = tsne.fit_transform(last_layer.data.numpy()[:plot_only, :])
-            #     labels = test_y.numpy()[:plot_only]
-            #     plot_with_labels(low_dim_embs, labels)
     test_output, last_layer = cnn(test_x)
     pred_y = torch.max(test_output, 1)[1].data.numpy()
     accuracy = float((pred_y == test_y.data.numpy()).astype(int).sum()) / float(test_y.size(0))
     print('Epoch: ', epoch, '| train loss: %.4f' % loss.data.numpy(), '| test accuracy: %.2f' % accuracy)
-    
     
     
     accuracy = 0
@@ -134,7 +120,6 @@ for epoch in range(EPOCH):
     number_per_class=[0] * num_classes
     correct_number_per_class= [0] * num_classes
     con_matrix = np.zeros(100).reshape((10,10))
-    #pred_label = torch.max(test_output, 1)[1].data.numpy()#four_nn(x_test,y_test,w1, w2, w3, w4, b1, b2, b3, b4, True)
     for i in range(pred_y.size):
         number_per_class[test_y[i]]+=1
         con_matrix[test_y[i]][int(pred_y[i])] += 1
@@ -152,10 +137,5 @@ for epoch in range(EPOCH):
     
 plt.ioff()
 
-# print 10 predictions from test data
-#test_output, _ = cnn(test_x[:])
-#pred_y = torch.max(test_output, 1)[1].data.numpy()
 
-#print(pred_y, 'prediction number')
-#print(test_y[:10].numpy(), 'real number')
 
